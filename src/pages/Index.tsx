@@ -1,8 +1,91 @@
-
 import { Button } from "@/components/ui/button";
 import { Scissors, Calendar, Star, Users } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Textarea } from "@/components/ui/textarea";
+import { useState } from "react";
 
 const Index = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    date: "",
+    time: "",
+    service: "",
+    notes: "",
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const message = `
+Olá! Gostaria de agendar um horário:
+
+📝 Nome: ${formData.name}
+📱 Telefone: ${formData.phone}
+📅 Data: ${formData.date}
+⏰ Horário: ${formData.time}
+💇‍♀️ Serviço: ${formData.service}
+📌 Observações: ${formData.notes}
+    `.trim();
+
+    const whatsappUrl = `https://wa.me/5571981859864?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, "_blank");
+  };
+
+  const services = [
+    {
+      icon: Scissors,
+      title: "Corte & Estilo",
+      description: "Cortes modernos e personalizados para realçar sua beleza natural",
+    },
+    {
+      icon: Star,
+      title: "Tratamentos",
+      description: "Tratamentos especializados para diferentes tipos de cabelo",
+    },
+    {
+      icon: Users,
+      title: "Maquiagem",
+      description: "Maquiagem profissional para todas as ocasiões",
+    },
+  ];
+
+  const stats = [
+    {
+      value: "5k+",
+      label: "Clientes Satisfeitos",
+    },
+    {
+      value: "10+",
+      label: "Anos de Experiência",
+    },
+    {
+      value: "50+",
+      label: "Profissionais",
+    },
+    {
+      value: "100%",
+      label: "Satisfação",
+    },
+  ];
+
+  const galleryImages = [
+    "https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1562322140-8baeececf3df?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1582095133179-bfd08e2fc6b3?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1487412912498-0447578fcca8?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=800&q=80",
+  ];
+
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
@@ -17,9 +100,93 @@ const Index = () => {
             <p className="text-lg md:text-xl max-w-2xl mx-auto text-white/90">
               Transforme sua beleza com profissionais experientes em um ambiente sofisticado e acolhedor.
             </p>
-            <Button size="lg" variant="secondary" className="mt-8">
-              Agende Agora
-            </Button>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button size="lg" variant="secondary" className="mt-8">
+                  Agende Agora
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle>Agende seu Horário</DialogTitle>
+                </DialogHeader>
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="name">Nome</Label>
+                    <Input
+                      id="name"
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="phone">Telefone</Label>
+                    <Input
+                      id="phone"
+                      value={formData.phone}
+                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      required
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="date">Data</Label>
+                      <Input
+                        id="date"
+                        type="date"
+                        value={formData.date}
+                        onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="time">Horário</Label>
+                      <Input
+                        id="time"
+                        type="time"
+                        value={formData.time}
+                        onChange={(e) => setFormData({ ...formData, time: e.target.value })}
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Serviço Desejado</Label>
+                    <RadioGroup
+                      value={formData.service}
+                      onValueChange={(value) => setFormData({ ...formData, service: value })}
+                      required
+                    >
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="corte" id="corte" />
+                        <Label htmlFor="corte">Corte & Estilo</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="tratamento" id="tratamento" />
+                        <Label htmlFor="tratamento">Tratamento</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="maquiagem" id="maquiagem" />
+                        <Label htmlFor="maquiagem">Maquiagem</Label>
+                      </div>
+                    </RadioGroup>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="notes">Observações</Label>
+                    <Textarea
+                      id="notes"
+                      value={formData.notes}
+                      onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                      placeholder="Alguma observação adicional?"
+                    />
+                  </div>
+                  <Button type="submit" className="w-full">
+                    Enviar pelo WhatsApp
+                  </Button>
+                </form>
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
       </section>
@@ -139,52 +306,5 @@ const Index = () => {
     </div>
   );
 };
-
-// Dados estáticos para a página
-const services = [
-  {
-    icon: Scissors,
-    title: "Corte & Estilo",
-    description: "Cortes modernos e personalizados para realçar sua beleza natural",
-  },
-  {
-    icon: Star,
-    title: "Tratamentos",
-    description: "Tratamentos especializados para diferentes tipos de cabelo",
-  },
-  {
-    icon: Users,
-    title: "Maquiagem",
-    description: "Maquiagem profissional para todas as ocasiões",
-  },
-];
-
-const stats = [
-  {
-    value: "5k+",
-    label: "Clientes Satisfeitos",
-  },
-  {
-    value: "10+",
-    label: "Anos de Experiência",
-  },
-  {
-    value: "50+",
-    label: "Profissionais",
-  },
-  {
-    value: "100%",
-    label: "Satisfação",
-  },
-];
-
-const galleryImages = [
-  "https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1562322140-8baeececf3df?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1582095133179-bfd08e2fc6b3?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1487412912498-0447578fcca8?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=800&q=80",
-];
 
 export default Index;
