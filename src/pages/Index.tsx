@@ -12,6 +12,13 @@ import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 const Index = () => {
   const [formData, setFormData] = useState({
@@ -22,6 +29,19 @@ const Index = () => {
     service: "",
     notes: "",
   });
+
+  const availableTimes = {
+    "2024-03-20": ["09:00", "10:00", "14:00", "15:00"],
+    "2024-03-21": ["11:00", "13:00", "16:00"],
+  };
+
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, date: e.target.value, time: "" });
+  };
+
+  const isTimeAvailable = (time: string) => {
+    return formData.date && availableTimes[formData.date]?.includes(time);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,8 +56,7 @@ Olá! Gostaria de agendar um horário:
 📌 Observações: ${formData.notes}
     `.trim();
 
-    const whatsappUrl = `https://wa.me/5571981859864?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, "_blank");
+    window.location.href = `https://wa.me/5571981859864?text=${encodeURIComponent(message)}`;
   };
 
   const services = [
@@ -86,24 +105,33 @@ Olá! Gostaria de agendar um horário:
     "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=800&q=80",
   ];
 
+  const carouselImages = [
+    {
+      url: "https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=800&q=80",
+      title: "Transformação Total",
+    },
+    {
+      url: "https://images.unsplash.com/photo-1562322140-8baeececf3df?auto=format&fit=crop&w=800&q=80",
+      title: "Beleza Natural",
+    },
+    {
+      url: "https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?auto=format&fit=crop&w=800&q=80",
+      title: "Cuidados Especiais",
+    },
+  ];
+
   return (
     <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="relative px-4 py-20 md:py-32 bg-gradient-to-r from-[#FF6B6B] to-[#FFE66D] text-white">
-        <div className="absolute inset-0 bg-black/20"></div>
-        <div className="container mx-auto relative">
-          <div className="text-center space-y-6 animate-fade-in">
-            <h1 className="text-4xl md:text-6xl font-bold leading-tight">
-              Beleza &<br />
-              <span className="text-white">Elegância</span>
-            </h1>
-            <p className="text-lg md:text-xl max-w-2xl mx-auto text-white/90">
-              Transforme sua beleza com profissionais experientes em um ambiente sofisticado e acolhedor.
-            </p>
+      <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md shadow-sm">
+        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+          <span className="text-2xl font-bold text-blue-900">BeautyPro</span>
+          <div className="space-x-6">
+            <a href="#servicos" className="text-blue-900 hover:text-blue-700">Serviços</a>
+            <a href="#galeria" className="text-blue-900 hover:text-blue-700">Galeria</a>
             <Dialog>
               <DialogTrigger asChild>
-                <Button size="lg" variant="secondary" className="mt-8">
-                  Agende Agora
+                <Button variant="default" className="bg-blue-600 hover:bg-blue-700">
+                  Agendar
                 </Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
@@ -136,19 +164,25 @@ Olá! Gostaria de agendar um horário:
                         id="date"
                         type="date"
                         value={formData.date}
-                        onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                        onChange={handleDateChange}
+                        min={new Date().toISOString().split('T')[0]}
                         required
                       />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="time">Horário</Label>
-                      <Input
-                        id="time"
-                        type="time"
-                        value={formData.time}
-                        onChange={(e) => setFormData({ ...formData, time: e.target.value })}
-                        required
-                      />
+                      <div className="grid grid-cols-2 gap-2 mt-2">
+                        {availableTimes[formData.date]?.map((time) => (
+                          <Button
+                            key={time}
+                            variant={formData.time === time ? "default" : "outline"}
+                            onClick={() => setFormData({ ...formData, time })}
+                            className="w-full"
+                          >
+                            {time}
+                          </Button>
+                        ))}
+                      </div>
                     </div>
                   </div>
                   <div className="space-y-2">
@@ -188,10 +222,37 @@ Olá! Gostaria de agendar um horário:
               </DialogContent>
             </Dialog>
           </div>
+        </nav>
+
+      <section className="pt-16 relative bg-gradient-to-r from-blue-600 to-blue-400">
+        <div className="container mx-auto px-4 py-20">
+          <div className="max-w-6xl mx-auto">
+            <Carousel className="w-full">
+              <CarouselContent>
+                {carouselImages.map((image, index) => (
+                  <CarouselItem key={index}>
+                    <div className="relative aspect-video rounded-lg overflow-hidden">
+                      <img
+                        src={image.url}
+                        alt={image.title}
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent">
+                        <div className="absolute bottom-0 left-0 p-8">
+                          <h3 className="text-3xl font-bold text-white">{image.title}</h3>
+                        </div>
+                      </div>
+                    </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious />
+              <CarouselNext />
+            </Carousel>
+          </div>
         </div>
       </section>
 
-      {/* Services Section */}
       <section className="py-20 px-4">
         <div className="container mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
@@ -212,7 +273,41 @@ Olá! Gostaria de agendar um horário:
         </div>
       </section>
 
-      {/* Gallery Section */}
+      <section className="py-20 px-4 bg-gray-50">
+        <div className="container mx-auto">
+          <h2 className="text-3xl font-bold text-center mb-12">Horários Disponíveis</h2>
+          <div className="max-w-md mx-auto bg-white rounded-lg shadow-lg p-6">
+            <div className="space-y-4">
+              <div>
+                <Label>Selecione uma data</Label>
+                <Input
+                  type="date"
+                  onChange={handleDateChange}
+                  min={new Date().toISOString().split('T')[0]}
+                />
+              </div>
+              {formData.date && availableTimes[formData.date] && (
+                <div>
+                  <Label>Horários disponíveis</Label>
+                  <div className="grid grid-cols-2 gap-2 mt-2">
+                    {availableTimes[formData.date].map((time) => (
+                      <Button
+                        key={time}
+                        variant={formData.time === time ? "default" : "outline"}
+                        onClick={() => setFormData({ ...formData, time })}
+                        className="w-full"
+                      >
+                        {time}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="py-20 px-4 bg-gradient-to-b from-gray-50 to-white">
         <div className="container mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
@@ -233,7 +328,6 @@ Olá! Gostaria de agendar um horário:
         </div>
       </section>
 
-      {/* Stats Section */}
       <section className="py-20 px-4 bg-primary text-white">
         <div className="container mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
@@ -249,7 +343,6 @@ Olá! Gostaria de agendar um horário:
         </div>
       </section>
 
-      {/* CTA Section */}
       <section className="py-20 px-4 bg-accent">
         <div className="container mx-auto text-center text-white">
           <h2 className="text-3xl md:text-4xl font-bold mb-6">
@@ -264,7 +357,56 @@ Olá! Gostaria de agendar um horário:
         </div>
       </section>
 
-      {/* Footer */}
+      <section className="py-20 px-4 bg-white">
+        <div className="container mx-auto">
+          <h2 className="text-3xl font-bold text-center mb-12">Política de Privacidade</h2>
+          <div className="max-w-3xl mx-auto prose prose-blue">
+            <h3>Seus dados estão seguros conosco</h3>
+            <p>
+              Nosso compromisso é com a proteção e privacidade dos seus dados pessoais.
+              Todas as informações coletadas são utilizadas apenas para:
+            </p>
+            <ul>
+              <li>Agendamento de serviços</li>
+              <li>Comunicação sobre seu atendimento</li>
+              <li>Melhorar nossos serviços</li>
+            </ul>
+            <p>
+              Não compartilhamos suas informações com terceiros e seguimos todas as
+              diretrizes da LGPD (Lei Geral de Proteção de Dados).
+            </p>
+            <h3>Termos de Serviço</h3>
+            <p>
+              Ao agendar um serviço conosco, você concorda com:
+            </p>
+            <ul>
+              <li>Política de cancelamento com 24h de antecedência</li>
+              <li>Chegada com 10 minutos de antecedência</li>
+              <li>Confirmação do agendamento via WhatsApp</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20 px-4 bg-blue-50">
+        <div className="container mx-auto text-center">
+          <h2 className="text-3xl font-bold mb-8">Entre em Contato</h2>
+          <div className="max-w-lg mx-auto">
+            <p className="text-lg mb-6">
+              Estamos aqui para ajudar a realçar sua beleza natural.
+              Entre em contato conosco para mais informações.
+            </p>
+            <Button
+              size="lg"
+              className="bg-blue-600 hover:bg-blue-700"
+              onClick={() => window.location.href = "https://wa.me/5571981859864"}
+            >
+              Fale Conosco pelo WhatsApp
+            </Button>
+          </div>
+        </div>
+      </section>
+
       <footer className="py-12 px-4 bg-gray-900 text-white">
         <div className="container mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
