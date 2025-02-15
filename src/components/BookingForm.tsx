@@ -79,6 +79,7 @@ Olá! Gostaria de agendar um horário:
             {availableTimes[formData.date as keyof typeof availableTimes]?.map((time) => (
               <Button
                 key={time}
+                type="button"
                 variant={formData.time === time ? "default" : "outline"}
                 onClick={() => setFormData({ ...formData, time })}
                 className="w-full"
@@ -87,6 +88,11 @@ Olá! Gostaria de agendar um horário:
               </Button>
             ))}
           </div>
+          {formData.date && !availableTimes[formData.date as keyof typeof availableTimes] && (
+            <p className="text-sm text-red-500 mt-2">
+              Não há horários disponíveis para esta data. Por favor, escolha outra data.
+            </p>
+          )}
         </div>
       </div>
       <div className="space-y-2">
@@ -119,7 +125,11 @@ Olá! Gostaria de agendar um horário:
           placeholder="Alguma observação adicional?"
         />
       </div>
-      <Button type="submit" className="w-full">
+      <Button 
+        type="submit" 
+        className="w-full"
+        disabled={!formData.date || !formData.time || !formData.service}
+      >
         Enviar pelo WhatsApp
       </Button>
     </form>
