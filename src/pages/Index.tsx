@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Scissors, Calendar, Star, Users } from "lucide-react";
 import {
@@ -222,7 +223,8 @@ Olá! Gostaria de agendar um horário:
               </DialogContent>
             </Dialog>
           </div>
-        </nav>
+        </div>
+      </nav>
 
       <section className="pt-16 relative bg-gradient-to-r from-blue-600 to-blue-400">
         <div className="container mx-auto px-4 py-20">
