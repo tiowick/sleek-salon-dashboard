@@ -24,33 +24,29 @@ const carouselImages = [
 
 const HeroCarousel = () => {
   return (
-    <section className="pt-16 relative bg-gradient-to-r from-blue-600 to-blue-400">
-      <div className="container mx-auto px-4 py-20">
-        <div className="max-w-6xl mx-auto">
-          <Carousel className="w-full">
-            <CarouselContent>
-              {carouselImages.map((image, index) => (
-                <CarouselItem key={index}>
-                  <div className="relative aspect-video rounded-lg overflow-hidden">
-                    <img
-                      src={image.url}
-                      alt={image.title}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent">
-                      <div className="absolute bottom-0 left-0 p-8">
-                        <h3 className="text-3xl font-bold text-white">{image.title}</h3>
-                      </div>
-                    </div>
+    <section className="relative w-full h-screen">
+      <Carousel className="w-full h-full">
+        <CarouselContent>
+          {carouselImages.map((image, index) => (
+            <CarouselItem key={index}>
+              <div className="relative w-full h-screen">
+                <img
+                  src={image.url}
+                  alt={image.title}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent">
+                  <div className="absolute bottom-0 left-0 p-8">
+                    <h3 className="text-4xl font-bold text-white">{image.title}</h3>
                   </div>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
-          </Carousel>
-        </div>
-      </div>
+                </div>
+              </div>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <CarouselPrevious className="left-4" />
+        <CarouselNext className="right-4" />
+      </Carousel>
     </section>
   );
 };
