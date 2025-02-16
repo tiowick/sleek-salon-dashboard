@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -20,12 +19,14 @@ const BookingForm = () => {
 
   const [availability, setAvailability] = useState(generateAvailability());
   const [availableTimesForDate, setAvailableTimesForDate] = useState<Array<{ time: string; available: boolean }>>([]);
+  const [showTimes, setShowTimes] = useState(true);
 
   useEffect(() => {
     if (formData.date) {
       const times = getAvailableTimesForDate(formData.date, availability);
       setAvailableTimesForDate(times);
       setFormData(prev => ({ ...prev, time: "" }));
+      setShowTimes(true);
     }
   }, [formData.date]);
 
@@ -39,6 +40,11 @@ const BookingForm = () => {
     }
     
     setFormData({ ...formData, date: selectedDate, time: "" });
+  };
+
+  const handleTimeSelect = (time: string) => {
+    setFormData(prev => ({ ...prev, time }));
+    setShowTimes(false);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -68,7 +74,7 @@ Olá! Gostaria de agendar um horário:
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6 max-h-[80vh] overflow-y-auto px-2">
       <div className="space-y-2">
         <Label htmlFor="name">Nome</Label>
         <Input
@@ -105,21 +111,35 @@ Olá! Gostaria de agendar um horário:
       </div>
       {formData.date && (
         <div className="space-y-2">
-          <Label>Horários Disponíveis</Label>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
-            {availableTimesForDate.map(({ time, available }) => (
-              <Button
-                key={time}
-                type="button"
-                variant={formData.time === time ? "default" : "outline"}
-                onClick={() => available && setFormData(prev => ({ ...prev, time }))}
-                disabled={!available}
-                className={`w-full text-sm ${!available && "opacity-50"}`}
-              >
-                {time}
-              </Button>
-            ))}
+          <div className="flex justify-between items-center">
+            <Label>Horário Selecionado: {formData.time || "Nenhum"}</Label>
+            <Button 
+              type="button" 
+              variant="ghost" 
+              size="sm"
+              onClick={() => setShowTimes(!showTimes)}
+              className="text-sm"
+            >
+              {showTimes ? "Ocultar Horários" : "Mostrar Horários"}
+            </Button>
           </div>
+          
+          {showTimes && (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+              {availableTimesForDate.map(({ time, available }) => (
+                <Button
+                  key={time}
+                  type="button"
+                  variant={formData.time === time ? "default" : "outline"}
+                  onClick={() => available && handleTimeSelect(time)}
+                  disabled={!available}
+                  className={`w-full text-sm ${!available && "opacity-50"}`}
+                >
+                  {time}
+                </Button>
+              ))}
+            </div>
+          )}
         </div>
       )}
       <div className="space-y-2">

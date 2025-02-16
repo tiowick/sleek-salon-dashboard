@@ -7,14 +7,35 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Textarea } from "@/components/ui/textarea";
-import { useState } from "react";
-import BookingForm from "@/components/BookingForm"; // Adicionando a importação do BookingForm
+import BookingForm from "@/components/BookingForm";
+import { useEffect, useState } from "react";
 
 const Index = () => {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  
+  const slides = [
+    {
+      image: "https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=1800&q=80",
+      title: "Transforme seu Visual"
+    },
+    {
+      image: "https://images.unsplash.com/photo-1562322140-8baeececf3df?auto=format&fit=crop&w=1800&q=80",
+      title: "Realce sua Beleza"
+    },
+    {
+      image: "https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?auto=format&fit=crop&w=1800&q=80",
+      title: "Cuide-se Conosco"
+    }
+  ];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+    }, 3000);
+
+    return () => clearInterval(timer);
+  }, []);
+
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -89,32 +110,59 @@ Olá! Gostaria de agendar um horário:
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="relative px-4 py-20 md:py-32 bg-gradient-to-r from-[#FF6B6B] to-[#FFE66D] text-white">
-        <div className="absolute inset-0 bg-black/20"></div>
-        <div className="container mx-auto relative">
-          <div className="text-center space-y-6 animate-fade-in">
-            <h1 className="text-4xl md:text-6xl font-bold leading-tight">
-              Beleza &<br />
-              <span className="text-white">Elegância</span>
-            </h1>
-            <p className="text-lg md:text-xl max-w-2xl mx-auto text-white/90">
-              Transforme sua beleza com profissionais experientes em um ambiente sofisticado e acolhedor.
-            </p>
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button size="lg" variant="secondary" className="mt-8">
-                  Agende Agora
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                  <DialogTitle>Agende seu Horário</DialogTitle>
-                </DialogHeader>
-                <BookingForm />
-              </DialogContent>
-            </Dialog>
+      {/* Carousel Section */}
+      <section className="relative w-full h-[60vh] md:h-[80vh]">
+        {slides.map((slide, index) => (
+          <div
+            key={index}
+            className={`absolute inset-0 transition-opacity duration-1000 ${
+              currentSlide === index ? "opacity-100" : "opacity-0"
+            }`}
+          >
+            <div 
+              className="absolute inset-0 bg-cover bg-center"
+              style={{ backgroundImage: `url(${slide.image})` }}
+            >
+              <div className="absolute inset-0 bg-black/50" />
+            </div>
           </div>
+        ))}
+        
+        {/* Hero Content */}
+        <div className="relative h-full flex flex-col items-center justify-center text-white px-4">
+          <h1 className="text-4xl md:text-6xl font-bold leading-tight text-center mb-6">
+            Beleza &<br />
+            <span className="text-white">Elegância</span>
+          </h1>
+          <p className="text-lg md:text-xl max-w-2xl mx-auto text-white/90 text-center mb-8">
+            Transforme sua beleza com profissionais experientes em um ambiente sofisticado e acolhedor.
+          </p>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button size="lg" variant="secondary">
+                Agende Agora
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>Agende seu Horário</DialogTitle>
+              </DialogHeader>
+              <BookingForm />
+            </DialogContent>
+          </Dialog>
+        </div>
+        
+        {/* Carousel Indicators */}
+        <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2">
+          {slides.map((_, index) => (
+            <button
+              key={index}
+              className={`w-2 h-2 rounded-full transition-all ${
+                currentSlide === index ? "bg-white w-4" : "bg-white/50"
+              }`}
+              onClick={() => setCurrentSlide(index)}
+            />
+          ))}
         </div>
       </section>
 
