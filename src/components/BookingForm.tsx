@@ -60,11 +60,15 @@ Olá! Gostaria de agendar um horário:
 📌 Observações: ${formData.notes}
     `.trim();
 
-    window.location.href = `https://wa.me/5571981859864?text=${encodeURIComponent(message)}`;
+    // Abre o WhatsApp e então recarrega a página após um pequeno delay
+    window.open(`https://wa.me/5571981859864?text=${encodeURIComponent(message)}`, "_blank");
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
       <div className="space-y-2">
         <Label htmlFor="name">Nome</Label>
         <Input
@@ -72,6 +76,7 @@ Olá! Gostaria de agendar um horário:
           value={formData.name}
           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           required
+          className="w-full"
         />
       </div>
       <div className="space-y-2">
@@ -81,6 +86,9 @@ Olá! Gostaria de agendar um horário:
           value={formData.phone}
           onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
           required
+          className="w-full"
+          type="tel"
+          placeholder="(71) 99999-9999"
         />
       </div>
       <div className="space-y-2">
@@ -92,12 +100,13 @@ Olá! Gostaria de agendar um horário:
           onChange={handleDateChange}
           min={new Date().toISOString().split('T')[0]}
           required
+          className="w-full"
         />
       </div>
       {formData.date && (
         <div className="space-y-2">
           <Label>Horários Disponíveis</Label>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
             {availableTimesForDate.map(({ time, available }) => (
               <Button
                 key={time}
@@ -105,7 +114,7 @@ Olá! Gostaria de agendar um horário:
                 variant={formData.time === time ? "default" : "outline"}
                 onClick={() => available && setFormData(prev => ({ ...prev, time }))}
                 disabled={!available}
-                className={`w-full ${!available && "opacity-50"}`}
+                className={`w-full text-sm ${!available && "opacity-50"}`}
               >
                 {time}
               </Button>
@@ -119,18 +128,19 @@ Olá! Gostaria de agendar um horário:
           value={formData.service}
           onValueChange={(value) => setFormData({ ...formData, service: value })}
           required
+          className="flex flex-col space-y-2"
         >
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 p-2 hover:bg-gray-100 rounded-md">
             <RadioGroupItem value="corte" id="corte" />
-            <Label htmlFor="corte">Corte & Estilo</Label>
+            <Label htmlFor="corte" className="flex-grow cursor-pointer">Corte & Estilo</Label>
           </div>
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 p-2 hover:bg-gray-100 rounded-md">
             <RadioGroupItem value="tratamento" id="tratamento" />
-            <Label htmlFor="tratamento">Tratamento</Label>
+            <Label htmlFor="tratamento" className="flex-grow cursor-pointer">Tratamento</Label>
           </div>
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 p-2 hover:bg-gray-100 rounded-md">
             <RadioGroupItem value="maquiagem" id="maquiagem" />
-            <Label htmlFor="maquiagem">Maquiagem</Label>
+            <Label htmlFor="maquiagem" className="flex-grow cursor-pointer">Maquiagem</Label>
           </div>
         </RadioGroup>
       </div>
@@ -141,6 +151,7 @@ Olá! Gostaria de agendar um horário:
           value={formData.notes}
           onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
           placeholder="Alguma observação adicional?"
+          className="w-full min-h-[100px]"
         />
       </div>
       <Button 
