@@ -110,81 +110,7 @@ Olá! Gostaria de agendar um horário:
                 <DialogHeader>
                   <DialogTitle>Agende seu Horário</DialogTitle>
                 </DialogHeader>
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Nome</Label>
-                    <Input
-                      id="name"
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="phone">Telefone</Label>
-                    <Input
-                      id="phone"
-                      value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      required
-                    />
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="date">Data</Label>
-                      <Input
-                        id="date"
-                        type="date"
-                        value={formData.date}
-                        onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                        required
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="time">Horário</Label>
-                      <Input
-                        id="time"
-                        type="time"
-                        value={formData.time}
-                        onChange={(e) => setFormData({ ...formData, time: e.target.value })}
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Serviço Desejado</Label>
-                    <RadioGroup
-                      value={formData.service}
-                      onValueChange={(value) => setFormData({ ...formData, service: value })}
-                      required
-                    >
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="corte" id="corte" />
-                        <Label htmlFor="corte">Corte & Estilo</Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="tratamento" id="tratamento" />
-                        <Label htmlFor="tratamento">Tratamento</Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="maquiagem" id="maquiagem" />
-                        <Label htmlFor="maquiagem">Maquiagem</Label>
-                      </div>
-                    </RadioGroup>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="notes">Observações</Label>
-                    <Textarea
-                      id="notes"
-                      value={formData.notes}
-                      onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                      placeholder="Alguma observação adicional?"
-                    />
-                  </div>
-                  <Button type="submit" className="w-full">
-                    Enviar pelo WhatsApp
-                  </Button>
-                </form>
+                <BookingForm />
               </DialogContent>
             </Dialog>
           </div>
@@ -258,9 +184,19 @@ Olá! Gostaria de agendar um horário:
           <p className="text-lg md:text-xl mb-8 opacity-90">
             Agende uma consulta e descubra como podemos realçar sua beleza natural
           </p>
-          <Button variant="secondary" size="lg">
-            Agende sua Visita
-          </Button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="secondary" size="lg">
+                Agende sua Visita
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>Agende seu Horário</DialogTitle>
+              </DialogHeader>
+              <BookingForm />
+            </DialogContent>
+          </Dialog>
         </div>
       </section>
 
