@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
+import BookingForm from "@/components/BookingForm"; // Adicionando a importação do BookingForm
 
 const Index = () => {
   const [formData, setFormData] = useState({
